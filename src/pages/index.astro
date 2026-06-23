@@ -1,0 +1,234 @@
+---
+import Base from '../layouts/Base.astro';
+
+const repoUrl = 'https://github.com/hempmillionaire/nono';
+const xUrl = 'https://x.com/nonolayer1';
+
+const specs = [
+  { label: 'Total emission target', value: '88,888,888 NONO', note: 'asymptotic, pre-tail' },
+  { label: 'Block time', value: '60 seconds', note: '' },
+  { label: 'Initial block reward', value: '~42.38 NONO', note: '' },
+  { label: 'Tail emission', value: '1.45 NONO / block', note: '~1.45 NONO per minute, forever' },
+  { label: 'Proof of work', value: 'RandomX', note: 'CPU-friendly, ASIC-resistant' },
+  { label: 'Decimals', value: '10', note: 'atomic units fit into uint64' },
+  { label: 'Privacy', value: 'RingCT, stealth addresses, bulletproofs+', note: 'inherited from Monero, unchanged' },
+  { label: 'Premine', value: 'None', note: 'genesis coinbase is provably unspendable' },
+  { label: 'Dev tax', value: 'None', note: '' },
+  { label: 'Founder allocation', value: 'None', note: '' },
+];
+---
+<Base>
+  <header class="border-b border-ink-800/60">
+    <div class="mx-auto flex max-w-6xl items-center justify-between px-6 py-5">
+      <a href="/" class="flex items-center gap-3" aria-label="NONO home">
+        <img src="/logo/nono-mark-light.png" alt="" width="32" height="32" class="h-8 w-8" />
+        <img src="/logo/nono-wordmark-light.png" alt="NONO" width="84" height="21" class="h-5 w-auto" />
+      </a>
+      <nav class="flex items-center gap-6 text-sm text-ink-300">
+        <a href="#what" class="hover:text-ink-100 transition-colors">What it is</a>
+        <a href="#specs" class="hover:text-ink-100 transition-colors">Specs</a>
+        <a href="#get" class="hover:text-ink-100 transition-colors">Get NONO</a>
+        <a href={repoUrl} class="hover:text-ink-100 transition-colors">GitHub</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section class="mx-auto max-w-6xl px-6 pt-24 pb-32 sm:pt-32 sm:pb-40">
+      <div class="flex flex-col items-center text-center">
+        <img
+          src="/logo/nono-mark-light.png"
+          alt=""
+          width="160"
+          height="160"
+          class="mb-10 h-32 w-32 sm:h-40 sm:w-40 opacity-95"
+        />
+        <h1 class="text-5xl sm:text-7xl font-medium tracking-tight">NONO</h1>
+        <p class="mt-6 max-w-2xl text-lg sm:text-xl text-ink-300 leading-relaxed">
+          A fair-launch, CPU-mined privacy currency. RandomX proof-of-work, RingCT privacy,
+          no premine, no dev tax, no founder allocation.
+        </p>
+        <div class="mt-10 flex flex-wrap items-center justify-center gap-3">
+          <a
+            href="#get"
+            class="rounded-md bg-ink-100 px-5 py-2.5 text-sm font-medium text-ink-950 hover:bg-white transition-colors"
+          >
+            Get NONO
+          </a>
+          <a
+            href={repoUrl}
+            class="rounded-md border border-ink-700 px-5 py-2.5 text-sm font-medium text-ink-100 hover:border-ink-400 transition-colors"
+          >
+            View on GitHub
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <section id="what" class="border-t border-ink-800/60">
+      <div class="mx-auto max-w-3xl px-6 py-24">
+        <h2 class="text-sm font-mono uppercase tracking-widest text-ink-400">What it is</h2>
+        <div class="mt-8 space-y-6 text-ink-300 text-lg leading-relaxed">
+          <p>
+            NONO is a fork of Monero with its own network, its own emission curve, and no insider
+            allocations. Privacy properties, the RandomX proof-of-work, and the broader Cryptonote
+            machinery are inherited from Monero unchanged.
+          </p>
+          <p>
+            Modern privacy coins tend to drift over time. GPU mining concentrates hash rate in
+            industrial farms, premines reward early insiders, dev funds nudge governance, and
+            "fair-launch" claims often come with quiet exceptions. NONO is an attempt to push back
+            on all four at once.
+          </p>
+          <p>
+            No premine. No reserved allocation. No team address. The genesis coinbase output is
+            derived from deterministic NUMS pubkeys with no known private key, so it is provably
+            unspendable. Every NONO in circulation was mined.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <section id="specs" class="border-t border-ink-800/60 bg-ink-900/40">
+      <div class="mx-auto max-w-4xl px-6 py-24">
+        <h2 class="text-sm font-mono uppercase tracking-widest text-ink-400">Specs</h2>
+        <p class="mt-3 text-ink-300 text-base">
+          The numbers below match what the chain emits at block 0. Verify them against the source
+          in <a href={repoUrl} class="underline decoration-ink-700 hover:decoration-ink-100">the repo</a>
+          before you trust them.
+        </p>
+        <div class="mt-10 overflow-hidden rounded-lg border border-ink-800">
+          <table class="w-full border-collapse text-sm sm:text-base">
+            <tbody>
+              {specs.map((row, i) => (
+                <tr class={i % 2 === 0 ? 'bg-ink-900/30' : 'bg-transparent'}>
+                  <th scope="row" class="px-4 sm:px-6 py-3.5 text-left font-medium text-ink-100 align-top w-1/3">
+                    {row.label}
+                  </th>
+                  <td class="px-4 sm:px-6 py-3.5 text-ink-300 align-top">
+                    <span class="text-ink-100">{row.value}</span>
+                    {row.note && <span class="text-ink-400"> &mdash; {row.note}</span>}
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <section id="get" class="border-t border-ink-800/60">
+      <div class="mx-auto max-w-5xl px-6 py-24">
+        <h2 class="text-sm font-mono uppercase tracking-widest text-ink-400">Get NONO</h2>
+        <p class="mt-3 max-w-2xl text-ink-300">
+          NONO has not yet launched mainnet. Until release binaries are published, the path is to
+          build from source. Instructions live in the repo.
+        </p>
+        <div class="mt-10 grid grid-cols-1 gap-4 sm:grid-cols-3">
+          <a
+            href={`${repoUrl}#compiling-nono-from-source`}
+            class="group block rounded-lg border border-ink-800 p-6 hover:border-ink-400 transition-colors"
+          >
+            <h3 class="text-lg font-medium text-ink-100">Build a wallet</h3>
+            <p class="mt-2 text-sm text-ink-400 leading-relaxed">
+              Compile <code class="text-ink-300">nono-wallet-cli</code> from source. Create a stealth
+              address, hold and send NONO.
+            </p>
+            <p class="mt-4 text-sm text-ink-300 group-hover:text-ink-100 transition-colors">
+              Build instructions &rarr;
+            </p>
+          </a>
+          <a
+            href={`${repoUrl}#compiling-nono-from-source`}
+            class="group block rounded-lg border border-ink-800 p-6 hover:border-ink-400 transition-colors"
+          >
+            <h3 class="text-lg font-medium text-ink-100">Run a node</h3>
+            <p class="mt-2 text-sm text-ink-400 leading-relaxed">
+              Run <code class="text-ink-300">nonod</code> to sync the chain, relay transactions, and
+              keep the network decentralized.
+            </p>
+            <p class="mt-4 text-sm text-ink-300 group-hover:text-ink-100 transition-colors">
+              Build instructions &rarr;
+            </p>
+          </a>
+          <a
+            href={`${repoUrl}#compiling-nono-from-source`}
+            class="group block rounded-lg border border-ink-800 p-6 hover:border-ink-400 transition-colors"
+          >
+            <h3 class="text-lg font-medium text-ink-100">Mine on CPU</h3>
+            <p class="mt-2 text-sm text-ink-400 leading-relaxed">
+              RandomX is designed for general-purpose CPUs. A laptop participates on the same terms
+              as anyone else.
+            </p>
+            <p class="mt-4 text-sm text-ink-300 group-hover:text-ink-100 transition-colors">
+              Build instructions &rarr;
+            </p>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <section id="verify" class="border-t border-ink-800/60 bg-ink-900/40">
+      <div class="mx-auto max-w-3xl px-6 py-24">
+        <h2 class="text-sm font-mono uppercase tracking-widest text-ink-400">Don't trust. Verify.</h2>
+        <div class="mt-8 space-y-6 text-ink-300 leading-relaxed">
+          <p>
+            The claim "no premine" only matters if it can be checked. NONO's genesis coinbase
+            output is paid to a NUMS pubkey, a point on the curve with no known private key,
+            derived deterministically from a public seed.
+          </p>
+          <p>
+            A small Python script in the chain repo regenerates the exact bytes of the genesis
+            transaction from that seed. Run it yourself, compare the output against the binary in
+            the source tree, and confirm the 42.38 NONO genesis output is unspendable by anyone.
+          </p>
+          <p>
+            <a
+              href={`${repoUrl}/blob/master/utils/genesis/derive_nums_pubkeys.py`}
+              class="inline-flex items-center gap-1 text-ink-100 underline decoration-ink-700 hover:decoration-ink-100"
+            >
+              utils/genesis/derive_nums_pubkeys.py &rarr;
+            </a>
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <section id="attribution" class="border-t border-ink-800/60">
+      <div class="mx-auto max-w-3xl px-6 py-24">
+        <h2 class="text-sm font-mono uppercase tracking-widest text-ink-400">Built on Monero</h2>
+        <div class="mt-8 space-y-6 text-ink-300 leading-relaxed">
+          <p>
+            NONO is built directly on the Monero source tree and would not exist without the work
+            of the Monero Project, the Monero Research Lab, and the Cryptonote authors. Where
+            cryptography or protocol is concerned, NONO inherits from upstream rather than
+            inventing.
+          </p>
+          <p>
+            The Monero Project has not endorsed NONO and is not affiliated with it. Bugs introduced
+            by NONO's changes are NONO's responsibility, not theirs.
+          </p>
+          <p class="text-sm text-ink-400">
+            Upstream: <a href="https://github.com/monero-project/monero" class="underline decoration-ink-700 hover:decoration-ink-100">github.com/monero-project/monero</a>
+            &nbsp;&middot;&nbsp;
+            RandomX: <a href="https://github.com/tevador/RandomX" class="underline decoration-ink-700 hover:decoration-ink-100">github.com/tevador/RandomX</a>
+          </p>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="border-t border-ink-800/60">
+    <div class="mx-auto flex max-w-6xl flex-col gap-6 px-6 py-10 sm:flex-row sm:items-center sm:justify-between">
+      <div class="flex items-center gap-3">
+        <img src="/logo/nono-wordmark-light.png" alt="NONO" width="68" height="17" class="h-4 w-auto opacity-70" />
+        <span class="text-xs text-ink-400">Fair-launch RandomX privacy L1</span>
+      </div>
+      <div class="flex items-center gap-6 text-sm text-ink-300">
+        <a href={repoUrl} class="hover:text-ink-100 transition-colors">GitHub</a>
+        <a href={xUrl} class="hover:text-ink-100 transition-colors">X</a>
+        <a href="#verify" class="hover:text-ink-100 transition-colors">Verify</a>
+      </div>
+    </div>
+  </footer>
+</Base>
