@@ -19,15 +19,19 @@ npm run build      # outputs to ./dist
 npm run preview    # serves ./dist locally
 ```
 
-## Deploy (Cloudflare Pages)
+## Deploy (Cloudflare Workers, static assets)
 
-1. In the Cloudflare dashboard go to **Workers & Pages** &rarr; **Create application** &rarr; **Pages** &rarr; **Connect to Git** and pick this repo.
-2. Build settings:
-   - Framework preset: **Astro**
-   - Build command: `npm run build`
-   - Build output directory: `dist`
-   - Node version: `20` (set via the `NODE_VERSION` env var)
-3. Once the first deploy lands, add a **Custom domain** &rarr; `nonoprivacy.com`. Cloudflare will offer to create the apex CNAME/ALIAS itself.
+This site deploys as a Cloudflare Worker serving static assets, configured by `wrangler.toml`. The build runs through Cloudflare's [Workers Builds](https://developers.cloudflare.com/workers/ci-cd/builds/) CI, triggered on every push to this repo.
+
+In the Cloudflare dashboard, under **Workers & Pages** &rarr; **nono-website** &rarr; **Settings** &rarr; **Build**, confirm:
+
+- Build command: `npm run build`
+- Deploy command: `npx wrangler deploy` (default)
+- Build output directory: `dist` (matches the `[assets] directory` in `wrangler.toml`)
+- Node version: `20` (set via `NODE_VERSION` env var)
+- Root directory: leave blank
+
+After the first successful deploy, add a **Custom domain** &rarr; `nonoprivacy.com` on the Worker. Cloudflare creates the CNAME automatically since the zone is already in your account.
 
 ## Content sources
 
