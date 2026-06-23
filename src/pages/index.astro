@@ -25,13 +25,17 @@ const specs = [
         <img src="/logo/nono-mark-light.png" alt="" width="32" height="32" class="h-8 w-8" />
         <img src="/logo/nono-wordmark-light.png" alt="NONO" width="84" height="21" class="h-5 w-auto" />
       </a>
-      <nav class="flex items-center gap-6 text-sm text-ink-300">
+      <nav class="hidden md:flex items-center gap-6 text-sm text-ink-300">
         <a href="#what" class="hover:text-ink-100 transition-colors">What it is</a>
         <a href="#specs" class="hover:text-ink-100 transition-colors">Specs</a>
         <a href="#get" class="hover:text-ink-100 transition-colors">Get NONO</a>
         <a href={discordUrl} class="hover:text-ink-100 transition-colors">Discord</a>
         <a href={repoUrl} class="hover:text-ink-100 transition-colors">GitHub</a>
       </nav>
+      <div class="flex md:hidden items-center gap-4 text-sm text-ink-300">
+        <a href={discordUrl} class="hover:text-ink-100 transition-colors">Discord</a>
+        <a href={repoUrl} class="hover:text-ink-100 transition-colors">GitHub</a>
+      </div>
     </div>
   </header>
 
