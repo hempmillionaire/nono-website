@@ -3,6 +3,7 @@ import Base from '../layouts/Base.astro';
 
 const repoUrl = 'https://github.com/hempmillionaire/nono';
 const xUrl = 'https://x.com/nonolayer1';
+const discordUrl = 'https://discord.gg/Tuwt6TAbJw';
 
 const specs = [
   { label: 'Total emission target', value: '88,888,888 NONO', note: 'asymptotic, pre-tail' },
@@ -28,6 +29,7 @@ const specs = [
         <a href="#what" class="hover:text-ink-100 transition-colors">What it is</a>
         <a href="#specs" class="hover:text-ink-100 transition-colors">Specs</a>
         <a href="#get" class="hover:text-ink-100 transition-colors">Get NONO</a>
+        <a href={discordUrl} class="hover:text-ink-100 transition-colors">Discord</a>
         <a href={repoUrl} class="hover:text-ink-100 transition-colors">GitHub</a>
       </nav>
     </div>
@@ -226,6 +228,7 @@ const specs = [
       </div>
       <div class="flex items-center gap-6 text-sm text-ink-300">
         <a href={repoUrl} class="hover:text-ink-100 transition-colors">GitHub</a>
+        <a href={discordUrl} class="hover:text-ink-100 transition-colors">Discord</a>
         <a href={xUrl} class="hover:text-ink-100 transition-colors">X</a>
         <a href="#verify" class="hover:text-ink-100 transition-colors">Verify</a>
       </div>
