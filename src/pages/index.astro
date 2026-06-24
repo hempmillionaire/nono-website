@@ -76,8 +76,15 @@ const howToHelp = [
 ];
 
 const ecosystem = [
-  'Block explorer', 'Desktop wallet', 'Mobile wallet', 'Web wallet',
-  'Public nodes', 'Mining pools', 'Merchant tools', 'BTC swaps', 'HEMP swaps',
+  { name: 'Block explorer', status: 'In development' },
+  { name: 'Web wallet', status: 'In development' },
+  { name: 'Desktop wallet', status: 'Planned' },
+  { name: 'Mobile wallet', status: 'Planned' },
+  { name: 'Public nodes', status: 'Planned' },
+  { name: 'Mining pools', status: 'Planned' },
+  { name: 'Merchant tools', status: 'Planned' },
+  { name: 'BTC swaps', status: 'Planned' },
+  { name: 'HEMP swaps', status: 'Planned' },
 ];
 ---
 <Base>
@@ -439,16 +446,34 @@ const ecosystem = [
       <div class="mx-auto max-w-4xl px-6 py-24">
         <h2 class="text-sm font-mono uppercase tracking-widest text-ink-400">The NONO ecosystem</h2>
         <p class="mt-3 max-w-2xl text-ink-300">
-          Current and planned infrastructure. NONO is growing into an ecosystem, not just a
-          blockchain repository.
+          NONO is growing into an ecosystem, not just a blockchain repository. A few pieces are
+          underway. The rest are open for anyone to build.
         </p>
         <div class="mt-10 grid grid-cols-2 gap-3 sm:grid-cols-3">
-          {ecosystem.map((name) => (
+          {ecosystem.map((item) => (
             <div class="rounded-lg border border-ink-800 px-5 py-4">
-              <span class="text-sm text-ink-100">{name}</span>
-              <span class="block text-xs text-ink-500">in development</span>
+              <span class="block text-sm text-ink-100">{item.name}</span>
+              <span class={item.status === 'In development'
+                ? 'mt-2 inline-block rounded-full border border-ink-600 px-2.5 py-0.5 text-xs font-medium text-ink-100'
+                : 'mt-2 inline-block rounded-full border border-ink-800 px-2.5 py-0.5 text-xs font-medium text-ink-500'}>
+                {item.status}
+              </span>
             </div>
           ))}
+        </div>
+        <div class="mt-10 rounded-lg border border-ink-800 bg-ink-950/40 p-6">
+          <p class="text-ink-200 leading-relaxed">
+            None of this is locked to a core team. Any of these can be built by the community, and
+            we would rather build them with you than alone.
+          </p>
+          <p class="mt-4 text-ink-300 leading-relaxed">
+            We post what we are actively working on in Discord and GitHub. Tell us what you are
+            building so we do not duplicate effort and can help each other ship it.
+          </p>
+          <div class="mt-6 flex flex-wrap gap-3">
+            <a href={discordUrl} class="rounded-md bg-ink-100 px-5 py-2.5 text-sm font-medium text-ink-950 hover:bg-white transition-colors">Join the Discord</a>
+            <a href={repoUrl} class="rounded-md border border-ink-700 px-5 py-2.5 text-sm font-medium text-ink-100 hover:border-ink-400 transition-colors">Build on GitHub</a>
+          </div>
         </div>
       </div>
     </section>
