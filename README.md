@@ -35,7 +35,7 @@ After the first successful deploy, add a **Custom domain** &rarr; `nonoprivacy.c
 
 ## Content sources
 
-All public claims about the chain (specs, emission, RandomX, no-premine) are lifted from the chain repo at [hempmillionaire/nono](https://github.com/hempmillionaire/nono). When a spec changes there, update the matching block in `src/pages/index.astro`.
+All public claims about the chain (specs, emission, RandomX, no-premine) are lifted from the chain repo at [hempmillionaire/nono](https://github.com/hempmillionaire/nono). The homepage (`src/pages/index.astro`) carries the condensed/marketing version; the full technical reference lives in `src/content/docs/*.md`, one file per topic, rendered at `/docs/*` via `src/layouts/DocsLayout.astro`. When a spec, port, or emission constant changes upstream, update both: the quick-facts block in `index.astro` and the matching docs page (each doc ends with a "Source" line pointing at the exact upstream file it was derived from).
 
 ## Logos
 

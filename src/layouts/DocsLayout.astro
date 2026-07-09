@@ -1,0 +1,99 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import { getCollection } from 'astro:content';
+import Base from './Base.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+
+interface Props {
+  entry: CollectionEntry<'docs'>;
+  Content: any;
+}
+
+const { entry, Content } = Astro.props;
+
+const allDocs = (await getCollection('docs')).sort((a, b) => a.data.order - b.data.order);
+const groups = ['Getting Started', 'Node Operators', 'Reference', 'Developers'] as const;
+
+const currentIndex = allDocs.findIndex((d) => d.slug === entry.slug);
+const prev = currentIndex > 0 ? allDocs[currentIndex - 1] : null;
+const next = currentIndex < allDocs.length - 1 ? allDocs[currentIndex + 1] : null;
+
+const linkClass = (active: boolean) =>
+  active
+    ? 'block rounded-md border-l-2 border-nono-action bg-nono-action/10 px-3 py-1.5 text-sm text-nono-highlight'
+    : 'block rounded-md border-l-2 border-transparent px-3 py-1.5 text-sm text-ink-300 transition-colors hover:bg-ink-900/60 hover:text-ink-100';
+---
+<Base title={`${entry.data.title} — NONO docs`} description={entry.data.description}>
+  <Header />
+  <div class="mx-auto max-w-6xl px-6 py-10 lg:grid lg:grid-cols-[240px_1fr] lg:gap-12 lg:py-14">
+    <aside class="lg:sticky lg:top-24 lg:self-start">
+      <details class="mb-8 rounded-lg border border-line-soft bg-ink-900/60 backdrop-blur-sm lg:hidden">
+        <summary class="cursor-pointer select-none rounded-lg px-4 py-3 text-sm font-medium text-ink-100 [&::-webkit-details-marker]:hidden">
+          On this page
+        </summary>
+        <nav class="border-t border-line-soft px-2 py-3" aria-label="Docs (mobile)">
+          {groups.map((group) => (
+            <div class="mb-3 last:mb-1">
+              <p class="px-3 pb-1 pt-2 font-mono text-xs uppercase tracking-widest text-ink-400">{group}</p>
+              {allDocs.filter((d) => d.data.group === group).map((d) => (
+                <a href={`/docs/${d.slug}`} class={linkClass(d.slug === entry.slug)}>{d.data.title}</a>
+              ))}
+            </div>
+          ))}
+        </nav>
+      </details>
+
+      <nav class="hidden lg:block" aria-label="Docs">
+        <a href="/docs" class="mb-6 block text-sm text-ink-400 transition-colors hover:text-nono-highlight">&larr; All docs</a>
+        {groups.map((group) => (
+          <div class="mb-6 last:mb-0">
+            <p class="px-3 pb-2 font-mono text-xs uppercase tracking-widest text-ink-400">{group}</p>
+            <ul class="space-y-0.5">
+              {allDocs.filter((d) => d.data.group === group).map((d) => (
+                <li><a href={`/docs/${d.slug}`} class={linkClass(d.slug === entry.slug)}>{d.data.title}</a></li>
+              ))}
+            </ul>
+          </div>
+        ))}
+      </nav>
+    </aside>
+
+    <article class="min-w-0 max-w-3xl">
+      <p class="font-mono text-xs font-semibold uppercase tracking-widest text-nono-highlight">{entry.data.group}</p>
+      <h1 class="mt-3 text-3xl font-semibold tracking-tight text-ink-100 sm:text-4xl">{entry.data.title}</h1>
+      <p class="mt-3 text-lg leading-relaxed text-ink-400">{entry.data.description}</p>
+
+      <div
+        class="prose prose-invert prose-neutral mt-10 max-w-none
+        prose-headings:font-medium prose-headings:tracking-tight prose-headings:text-ink-100
+        prose-p:leading-relaxed prose-p:text-ink-300 prose-li:text-ink-300 prose-strong:text-ink-100
+        prose-a:text-nono-highlight prose-a:underline prose-a:decoration-line-strong hover:prose-a:decoration-nono-highlight
+        prose-code:text-nono-highlight prose-code:before:content-none prose-code:after:content-none
+        prose-pre:border prose-pre:border-line-soft prose-pre:bg-ink-950
+        prose-table:text-sm prose-thead:border-line-soft prose-th:text-ink-100 prose-td:text-ink-300 prose-tr:border-line-soft
+        prose-blockquote:border-nono-action prose-blockquote:text-ink-400
+        prose-hr:border-line-soft
+        [&_pre]:overflow-x-auto [&_table]:block [&_table]:overflow-x-auto [&_table]:whitespace-nowrap"
+      >
+        <Content />
+      </div>
+
+      <div class="mt-16 flex flex-col gap-3 border-t border-line-soft pt-8 sm:flex-row sm:items-stretch sm:justify-between">
+        {prev ? (
+          <a href={`/docs/${prev.slug}`} class="group flex-1 rounded-lg border border-line-soft bg-ink-900/60 px-5 py-4 backdrop-blur-sm transition-colors hover:border-line-strong">
+            <span class="block text-xs text-ink-400">&larr; Previous</span>
+            <span class="mt-1 block text-sm font-medium text-ink-200 group-hover:text-nono-highlight">{prev.data.title}</span>
+          </a>
+        ) : <div class="flex-1" />}
+        {next ? (
+          <a href={`/docs/${next.slug}`} class="group flex-1 rounded-lg border border-line-soft bg-ink-900/60 px-5 py-4 text-right backdrop-blur-sm transition-colors hover:border-line-strong">
+            <span class="block text-xs text-ink-400">Next &rarr;</span>
+            <span class="mt-1 block text-sm font-medium text-ink-200 group-hover:text-nono-highlight">{next.data.title}</span>
+          </a>
+        ) : <div class="flex-1" />}
+      </div>
+    </article>
+  </div>
+  <Footer />
+</Base>

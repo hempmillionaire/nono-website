@@ -1,26 +1,31 @@
 ---
 import Base from '../layouts/Base.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import SectionHeading from '../components/SectionHeading.astro';
 
 const repoUrl = 'https://github.com/hempmillionaire/nono';
 const xUrl = 'https://x.com/nonochain';
 const discordUrl = 'https://discord.gg/Tuwt6TAbJw';
 const telegramUrl = 'https://t.me/nonoprivacy';
-const buildUrl = `${repoUrl}#compiling-nono-from-source`;
-const genesis = '60f468fef881125f510f7c93a8790eff5cba77cd7061437edc04b581940c5d6e';
 
-const pillars = ['Privacy', 'Self-custody', 'Fair launch', 'Accessible mining'];
+const btnPrimary =
+  'inline-flex items-center justify-center gap-2 rounded-lg bg-nono-action px-5 py-2.5 text-sm font-semibold text-white shadow-glow transition-all hover:-translate-y-0.5 hover:bg-nono-action-hover';
+const btnGhost =
+  'inline-flex items-center justify-center gap-2 rounded-lg border border-line-soft bg-ink-900/60 px-5 py-2.5 text-sm font-medium text-ink-100 backdrop-blur transition-colors hover:border-line-strong hover:bg-ink-900';
+const btnPill =
+  'inline-flex items-center justify-center rounded-full border border-line-soft bg-ink-900/40 px-4 py-2 text-sm font-medium text-ink-300 backdrop-blur transition-colors hover:border-line-strong hover:text-ink-100';
+const card =
+  'rounded-lg border border-line-soft bg-ink-900/60 backdrop-blur-sm transition-all hover:border-line-strong hover:-translate-y-0.5';
 
-const specs = [
-  { label: 'Total emission target', value: '88,888,888 NONO', note: 'asymptotic, pre-tail' },
-  { label: 'Block time', value: '60 seconds', note: '' },
-  { label: 'Initial block reward', value: '~42.38 NONO', note: '' },
-  { label: 'Tail emission', value: '1.45 NONO / block', note: '~1.45 NONO per minute, forever' },
-  { label: 'Proof of work', value: 'RandomX', note: 'CPU-friendly, ASIC-resistant' },
-  { label: 'Decimals', value: '10', note: 'atomic units fit into uint64' },
-  { label: 'Privacy', value: 'RingCT, stealth addresses, bulletproofs+', note: 'inherited from Monero, unchanged' },
-  { label: 'Premine', value: 'None', note: 'genesis coinbase is provably unspendable' },
-  { label: 'Dev tax', value: 'None', note: '' },
-  { label: 'Founder allocation', value: 'None', note: '' },
+const trustStrip = ['No premine', 'CPU-only mining', 'Open source', 'No dev tax'];
+
+const quickFacts = [
+  { label: 'Total emission target', value: '88,888,888 NONO' },
+  { label: 'Block time', value: '60 seconds' },
+  { label: 'Proof of work', value: 'RandomX (CPU-only)' },
+  { label: 'Privacy', value: 'RingCT + stealth + bulletproofs+' },
+  { label: 'Premine / dev tax / founder cut', value: 'None' },
 ];
 
 const selfCustody = [
@@ -33,6 +38,33 @@ const selfCustody = [
   'No platform can freeze your wallet',
 ];
 
+const randomXPoints = [
+  { title: 'More participants', body: 'A laptop mines on the same terms as anyone else.' },
+  { title: 'More decentralization', body: 'No ASIC farms concentrating hash rate.' },
+  { title: 'More accessible mining', body: 'Commodity hardware, no special rigs.' },
+];
+
+const miningSteps = [
+  {
+    title: 'Build a wallet',
+    body: 'Compile nono-wallet-cli from source. Create a stealth address, hold and send NONO.',
+    href: '/docs/wallet',
+    cta: 'Wallet guide',
+  },
+  {
+    title: 'Run a node',
+    body: 'Run nonod to sync the chain, relay transactions, and keep the network decentralized.',
+    href: '/docs/running-a-node',
+    cta: 'Node guide',
+  },
+  {
+    title: 'Mine on CPU',
+    body: 'RandomX is designed for general-purpose CPUs. A laptop participates on the same terms as anyone else.',
+    href: '/docs/mining',
+    cta: 'Mining guide',
+  },
+];
+
 const wallets = [
   { name: 'CLI wallet', status: 'Available from source', live: true },
   { name: 'Desktop wallet', status: 'Planned', live: false },
@@ -40,22 +72,14 @@ const wallets = [
   { name: 'Web wallet / PWA', status: 'Planned', live: false },
 ];
 
-const networkFacts = [
-  { label: 'Mainnet P2P', value: '24700', note: '' },
-  { label: 'Local RPC', value: '24701', note: 'bound to 127.0.0.1 only' },
-  { label: 'Proof of work', value: 'RandomX', note: '' },
-  { label: 'Block target', value: '60 seconds', note: '' },
-  { label: 'Launch', value: 'Fair launch, open source', note: '' },
-];
-
 const resources = [
+  { label: 'Documentation', href: '/docs', soon: false },
   { label: 'GitHub', href: repoUrl, soon: false },
   { label: 'Discord', href: discordUrl, soon: false },
   { label: 'Telegram', href: telegramUrl, soon: false },
   { label: 'X', href: xUrl, soon: false },
-  { label: 'Build from source', href: buildUrl, soon: false },
-  { label: 'Mining guide', href: '#mining', soon: false },
-  { label: 'Network parameters', href: '#network', soon: false },
+  { label: 'Mining guide', href: '/docs/mining', soon: false },
+  { label: 'Network parameters', href: '/docs/network-parameters', soon: false },
   { label: 'Launch notes', href: repoUrl, soon: false },
   { label: 'Block explorer', href: null, soon: true },
   { label: 'Public nodes', href: null, soon: true },
@@ -90,104 +114,62 @@ const ecosystem = [
 ];
 ---
 <Base>
-  <header class="border-b border-ink-800/60">
-    <div class="mx-auto flex max-w-6xl items-center justify-between px-6 py-5">
-      <a href="/" class="flex items-center gap-3" aria-label="NONO home">
-        <img src="/logo/nono-mark-light.png" alt="" width="32" height="32" class="h-8 w-8" />
-        <img src="/logo/nono-wordmark-light.png" alt="NONO" width="84" height="21" class="h-5 w-auto" />
-      </a>
-      <nav class="hidden md:flex items-center gap-6 text-sm text-ink-300">
-        <a href="#why" class="hover:text-ink-100 transition-colors">Why NONO</a>
-        <a href="#randomx" class="hover:text-ink-100 transition-colors">RandomX</a>
-        <a href="#mining" class="hover:text-ink-100 transition-colors">Mining</a>
-        <a href="#network" class="hover:text-ink-100 transition-colors">Network</a>
-        <a href="#resources" class="hover:text-ink-100 transition-colors">Resources</a>
-        <a href={discordUrl} class="hover:text-ink-100 transition-colors">Discord</a>
-        <a href={telegramUrl} class="hover:text-ink-100 transition-colors">Telegram</a>
-        <a href={repoUrl} class="hover:text-ink-100 transition-colors">GitHub</a>
-      </nav>
-      <div class="flex md:hidden items-center gap-4 text-sm text-ink-300">
-        <a href={discordUrl} class="hover:text-ink-100 transition-colors">Discord</a>
-        <a href={telegramUrl} class="hover:text-ink-100 transition-colors">Telegram</a>
-        <a href={repoUrl} class="hover:text-ink-100 transition-colors">GitHub</a>
-      </div>
-    </div>
-  </header>
+  <Header />
 
   <main>
     <!-- Hero -->
-    <section class="mx-auto max-w-6xl px-6 pt-24 pb-20 sm:pt-32 sm:pb-24">
-      <div class="flex flex-col items-center text-center">
+    <section>
+      <div class="mx-auto flex max-w-6xl flex-col items-center px-6 pt-20 pb-20 text-center sm:pt-28 sm:pb-24">
+        <div class="inline-flex items-center gap-2 rounded-full border border-line-soft bg-ink-900/60 px-4 py-1.5 text-xs font-semibold uppercase tracking-wide text-nono-highlight backdrop-blur">
+          <span class="h-1.5 w-1.5 rounded-full bg-nono-action shadow-glow"></span>
+          NONO Mainnet &middot; Fair-launch &middot; Open source
+        </div>
+
         <img
           src="/logo/nono-mark-light.png"
           alt=""
-          width="160"
-          height="160"
-          class="mb-10 h-32 w-32 sm:h-40 sm:w-40 opacity-95"
+          width="140"
+          height="140"
+          class="mt-10 h-28 w-28 sm:h-32 sm:w-32"
         />
-        <h1 class="text-5xl sm:text-7xl font-medium tracking-tight">NONO</h1>
-        <p class="mt-6 max-w-2xl text-lg sm:text-xl text-ink-200 leading-relaxed">
+        <h1 class="mt-8 text-5xl font-semibold tracking-tight sm:text-7xl">
+          <span class="bg-gradient-brand bg-clip-text text-transparent">NONO</span>
+        </h1>
+        <p class="mt-6 max-w-2xl text-lg leading-relaxed text-ink-200 sm:text-xl">
           A fair-launch RandomX privacy currency. CPU-mined. No premine, no ICO, no dev
           tax, no founder allocation.
         </p>
-        <p class="mt-4 text-base sm:text-lg text-ink-400">Private digital cash for the internet.</p>
+        <p class="mt-4 text-base text-ink-400 sm:text-lg">Private digital cash for the internet.</p>
+
         <div class="mt-10 flex flex-wrap items-center justify-center gap-3">
-          <a
-            href="#mining"
-            class="rounded-md bg-ink-100 px-5 py-2.5 text-sm font-medium text-ink-950 hover:bg-white transition-colors"
-          >
-            Start mining
-          </a>
-          <a
-            href="#why"
-            class="rounded-md border border-ink-700 px-5 py-2.5 text-sm font-medium text-ink-100 hover:border-ink-400 transition-colors"
-          >
-            Why NONO
-          </a>
+          <a href="/docs/mining" class={btnPrimary}>Start mining</a>
+          <a href="/docs" class={btnGhost}>Read the docs</a>
+          <a href="#why" class={btnGhost}>Why NONO</a>
         </div>
+
         <div class="mt-6 flex flex-wrap items-center justify-center gap-3">
-          <a
-            href={discordUrl}
-            class="rounded-md border border-ink-800 px-4 py-2 text-sm font-medium text-ink-200 hover:border-ink-400 hover:text-ink-100 transition-colors"
-          >
-            Discord
-          </a>
-          <a
-            href={telegramUrl}
-            class="rounded-md border border-ink-800 px-4 py-2 text-sm font-medium text-ink-200 hover:border-ink-400 hover:text-ink-100 transition-colors"
-          >
-            Telegram
-          </a>
-          <a
-            href={xUrl}
-            class="rounded-md border border-ink-800 px-4 py-2 text-sm font-medium text-ink-200 hover:border-ink-400 hover:text-ink-100 transition-colors"
-          >
-            X / @nonochain
-          </a>
-          <a
-            href={repoUrl}
-            class="rounded-md border border-ink-800 px-4 py-2 text-sm font-medium text-ink-200 hover:border-ink-400 hover:text-ink-100 transition-colors"
-          >
-            GitHub
-          </a>
+          <a href={discordUrl} class={btnPill}>Discord</a>
+          <a href={telegramUrl} class={btnPill}>Telegram</a>
+          <a href={xUrl} class={btnPill}>X / @nonochain</a>
+          <a href={repoUrl} class={btnPill}>GitHub</a>
         </div>
-      </div>
-      <!-- Pillars -->
-      <div class="mt-16 grid grid-cols-2 gap-px overflow-hidden rounded-lg border border-ink-800 bg-ink-800 sm:grid-cols-4">
-        {pillars.map((p) => (
-          <div class="bg-ink-950 px-4 py-5 text-center">
-            <span class="text-sm font-medium text-ink-100">{p}</span>
-          </div>
-        ))}
+
+        <div class="mt-10 flex flex-wrap items-center justify-center gap-x-6 gap-y-3">
+          {trustStrip.map((item) => (
+            <span class="inline-flex items-center gap-2 text-sm font-medium text-ink-300">
+              <svg class="h-4 w-4 text-nono-highlight" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              {item}
+            </span>
+          ))}
+        </div>
       </div>
     </section>
 
     <!-- Private Money -->
-    <section id="why" class="border-t border-ink-800/60">
-      <div class="mx-auto max-w-3xl px-6 py-24">
-        <h2 class="text-sm font-mono uppercase tracking-widest text-ink-400">Private money</h2>
-        <div class="mt-8 space-y-6 text-ink-300 text-lg leading-relaxed">
-          <p class="text-ink-100 text-xl">Cash used to be private.</p>
+    <section id="why" class="border-t border-line-soft">
+      <div class="mx-auto max-w-6xl px-6 py-20 sm:py-24">
+        <SectionHeading eyebrow="Private money" title="Cash used to be private." />
+        <div class="mt-8 max-w-3xl space-y-6 text-lg leading-relaxed text-ink-300">
           <p>
             When you spend physical cash, no bank builds a profile on you, no company tracks every
             purchase, and no intermediary decides whether a transaction is allowed.
@@ -199,11 +181,11 @@ const ecosystem = [
     </section>
 
     <!-- Be Your Own Bank -->
-    <section class="border-t border-ink-800/60 bg-ink-900/40">
-      <div class="mx-auto max-w-4xl px-6 py-24">
-        <h2 class="text-sm font-mono uppercase tracking-widest text-ink-400">Be your own bank</h2>
+    <section class="border-t border-line-soft bg-ink-900/30">
+      <div class="mx-auto max-w-6xl px-6 py-20 sm:py-24">
+        <SectionHeading eyebrow="Self-custody" title="Be your own bank." />
         <div class="mt-8 grid grid-cols-1 gap-12 lg:grid-cols-2">
-          <div class="space-y-6 text-ink-300 text-lg leading-relaxed">
+          <div class="space-y-6 text-lg leading-relaxed text-ink-300">
             <p>NONO is built for self-custody, privacy, and financial independence.</p>
             <p>
               Your wallet is yours. Your transactions are private by default. Your coins are mined
@@ -219,10 +201,10 @@ const ecosystem = [
               code.
             </p>
           </div>
-          <ul class="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-1 self-start">
+          <ul class="grid grid-cols-1 gap-3 self-start sm:grid-cols-2 lg:grid-cols-1">
             {selfCustody.map((item) => (
-              <li class="flex items-start gap-3 rounded-md border border-ink-800 px-4 py-3 text-sm text-ink-200">
-                <span class="text-ink-500" aria-hidden="true">&rarr;</span>
+              <li class={`${card} flex items-start gap-3 px-4 py-3 text-sm text-ink-200`}>
+                <svg class="mt-0.5 h-4 w-4 flex-shrink-0 text-nono-highlight" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12" stroke-linecap="round" stroke-linejoin="round"/></svg>
                 <span>{item}</span>
               </li>
             ))}
@@ -232,10 +214,10 @@ const ecosystem = [
     </section>
 
     <!-- Why RandomX -->
-    <section id="randomx" class="border-t border-ink-800/60">
-      <div class="mx-auto max-w-3xl px-6 py-24">
-        <h2 class="text-sm font-mono uppercase tracking-widest text-ink-400">Why RandomX?</h2>
-        <div class="mt-8 space-y-6 text-ink-300 text-lg leading-relaxed">
+    <section id="randomx" class="border-t border-line-soft">
+      <div class="mx-auto max-w-6xl px-6 py-20 sm:py-24">
+        <SectionHeading eyebrow="Proof of work" title="Why RandomX?" />
+        <div class="mt-8 max-w-3xl space-y-6 text-lg leading-relaxed text-ink-300">
           <p>NONO uses RandomX proof-of-work.</p>
           <p>
             RandomX is optimized for general-purpose CPUs instead of specialized ASIC hardware.
@@ -244,179 +226,149 @@ const ecosystem = [
           </p>
         </div>
         <div class="mt-10 grid grid-cols-1 gap-4 sm:grid-cols-3">
-          <div class="rounded-lg border border-ink-800 p-6">
-            <p class="text-ink-100 font-medium">More participants</p>
-            <p class="mt-2 text-sm text-ink-400 leading-relaxed">A laptop mines on the same terms as anyone else.</p>
-          </div>
-          <div class="rounded-lg border border-ink-800 p-6">
-            <p class="text-ink-100 font-medium">More decentralization</p>
-            <p class="mt-2 text-sm text-ink-400 leading-relaxed">No ASIC farms concentrating hash rate.</p>
-          </div>
-          <div class="rounded-lg border border-ink-800 p-6">
-            <p class="text-ink-100 font-medium">More accessible mining</p>
-            <p class="mt-2 text-sm text-ink-400 leading-relaxed">Commodity hardware, no special rigs.</p>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- Specs -->
-    <section id="specs" class="border-t border-ink-800/60 bg-ink-900/40">
-      <div class="mx-auto max-w-4xl px-6 py-24">
-        <h2 class="text-sm font-mono uppercase tracking-widest text-ink-400">Specs</h2>
-        <p class="mt-3 text-ink-300 text-base">
-          The numbers below match what the chain emits at block 0. Verify them against the source
-          in <a href={repoUrl} class="underline decoration-ink-700 hover:decoration-ink-100">the repo</a>
-          before you trust them.
-        </p>
-        <div class="mt-10 overflow-hidden rounded-lg border border-ink-800">
-          <table class="w-full border-collapse text-sm sm:text-base">
-            <tbody>
-              {specs.map((row, i) => (
-                <tr class={i % 2 === 0 ? 'bg-ink-900/30' : 'bg-transparent'}>
-                  <th scope="row" class="px-4 sm:px-6 py-3.5 text-left font-medium text-ink-100 align-top w-1/3">
-                    {row.label}
-                  </th>
-                  <td class="px-4 sm:px-6 py-3.5 text-ink-300 align-top">
-                    <span class="text-ink-100">{row.value}</span>
-                    {row.note && <span class="text-ink-400"> &mdash; {row.note}</span>}
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      </div>
-    </section>
-
-    <!-- Start Mining -->
-    <section id="mining" class="border-t border-ink-800/60">
-      <div class="mx-auto max-w-5xl px-6 py-24">
-        <h2 class="text-sm font-mono uppercase tracking-widest text-ink-400">Start mining</h2>
-        <div class="mt-8 max-w-2xl space-y-5 text-ink-300 text-lg leading-relaxed">
-          <p class="text-ink-100">Run a node. Create a wallet. Mine NONO directly from your CPU.</p>
-          <p>No special hardware required. No founder allocation. No premine. No ICO. Participate from day one.</p>
-        </div>
-        <p class="mt-6 max-w-2xl text-sm text-ink-400">
-          Mainnet is live and being mined now. Release binaries are not published yet, so the path
-          today is to build from source. Build instructions live in the repo.
-        </p>
-        <div class="mt-8 rounded-lg border border-ink-800 bg-ink-900/40 p-5">
-          <p class="text-sm font-medium text-ink-100">Mine to your own address</p>
-          <p class="mt-1 text-sm text-ink-400">
-            Build <code class="text-ink-300">nonod</code> from source, then run a node and point
-            RandomX at your wallet address:
-          </p>
-          <pre class="mt-4 overflow-x-auto rounded-md bg-ink-950 border border-ink-800 px-4 py-3 text-sm text-ink-200"><code>./nonod --start-mining &lt;YOUR_NONO_ADDRESS&gt; --mining-threads 4</code></pre>
-          <p class="mt-3 text-xs text-ink-400">
-            Make a wallet first with <code class="text-ink-300">nono-wallet-cli</code> to get an
-            address. CPU only, no GPU or ASIC needed. See
-            <a href={buildUrl} class="underline decoration-ink-700 hover:decoration-ink-100">build instructions</a>.
-          </p>
-        </div>
-        <div class="mt-10 grid grid-cols-1 gap-4 sm:grid-cols-3">
-          <a href={buildUrl} class="group block rounded-lg border border-ink-800 p-6 hover:border-ink-400 transition-colors">
-            <h3 class="text-lg font-medium text-ink-100">Build a wallet</h3>
-            <p class="mt-2 text-sm text-ink-400 leading-relaxed">
-              Compile <code class="text-ink-300">nono-wallet-cli</code> from source. Create a stealth
-              address, hold and send NONO.
-            </p>
-            <p class="mt-4 text-sm text-ink-300 group-hover:text-ink-100 transition-colors">Build instructions &rarr;</p>
-          </a>
-          <a href={buildUrl} class="group block rounded-lg border border-ink-800 p-6 hover:border-ink-400 transition-colors">
-            <h3 class="text-lg font-medium text-ink-100">Run a node</h3>
-            <p class="mt-2 text-sm text-ink-400 leading-relaxed">
-              Run <code class="text-ink-300">nonod</code> to sync the chain, relay transactions, and
-              keep the network decentralized.
-            </p>
-            <p class="mt-4 text-sm text-ink-300 group-hover:text-ink-100 transition-colors">Build instructions &rarr;</p>
-          </a>
-          <a href={buildUrl} class="group block rounded-lg border border-ink-800 p-6 hover:border-ink-400 transition-colors">
-            <h3 class="text-lg font-medium text-ink-100">Mine on CPU</h3>
-            <p class="mt-2 text-sm text-ink-400 leading-relaxed">
-              RandomX is designed for general-purpose CPUs. A laptop participates on the same terms
-              as anyone else.
-            </p>
-            <p class="mt-4 text-sm text-ink-300 group-hover:text-ink-100 transition-colors">Build instructions &rarr;</p>
-          </a>
-        </div>
-      </div>
-    </section>
-
-    <!-- Wallets -->
-    <section id="wallets" class="border-t border-ink-800/60 bg-ink-900/40">
-      <div class="mx-auto max-w-4xl px-6 py-24">
-        <h2 class="text-sm font-mono uppercase tracking-widest text-ink-400">Wallets</h2>
-        <p class="mt-3 max-w-2xl text-ink-300">
-          The CLI wallet ships with the source today. Desktop, mobile, and web wallets are on the
-          roadmap.
-        </p>
-        <div class="mt-10 grid grid-cols-1 gap-4 sm:grid-cols-2">
-          {wallets.map((w) => (
-            <div class="flex items-center justify-between rounded-lg border border-ink-800 px-5 py-4">
-              <span class="text-ink-100 font-medium">{w.name}</span>
-              <span class={w.live
-                ? 'rounded-full border border-ink-600 px-3 py-1 text-xs font-medium text-ink-100'
-                : 'rounded-full border border-ink-800 px-3 py-1 text-xs font-medium text-ink-500'}>
-                {w.status}
-              </span>
+          {randomXPoints.map((p, i) => (
+            <div class={`${card} p-6`}>
+              <div class="flex h-9 w-9 items-center justify-center rounded-lg bg-nono-action/15 font-mono text-sm font-semibold text-nono-highlight">
+                {String(i + 1).padStart(2, '0')}
+              </div>
+              <p class="mt-4 font-medium text-ink-100">{p.title}</p>
+              <p class="mt-2 text-sm leading-relaxed text-ink-400">{p.body}</p>
             </div>
           ))}
         </div>
       </div>
     </section>
 
-    <!-- Network Information -->
-    <section id="network" class="border-t border-ink-800/60">
-      <div class="mx-auto max-w-4xl px-6 py-24">
-        <h2 class="text-sm font-mono uppercase tracking-widest text-ink-400">Network information</h2>
-        <p class="mt-3 max-w-2xl text-ink-300">
-          Mainnet is up. Default ports and the launch genesis hash are below. A node on the wrong
-          genesis will not peer, so check this before you sync.
-        </p>
-        <div class="mt-10 overflow-hidden rounded-lg border border-ink-800">
-          <table class="w-full border-collapse text-sm sm:text-base">
-            <tbody>
-              {networkFacts.map((row, i) => (
-                <tr class={i % 2 === 0 ? 'bg-ink-900/30' : 'bg-transparent'}>
-                  <th scope="row" class="px-4 sm:px-6 py-3.5 text-left font-medium text-ink-100 align-top w-1/3">{row.label}</th>
-                  <td class="px-4 sm:px-6 py-3.5 text-ink-300 align-top">
-                    <span class="font-mono text-ink-100">{row.value}</span>
-                    {row.note && <span class="text-ink-400"> &mdash; {row.note}</span>}
-                  </td>
-                </tr>
-              ))}
-              <tr class="bg-ink-900/30">
-                <th scope="row" class="px-4 sm:px-6 py-3.5 text-left font-medium text-ink-100 align-top w-1/3">Genesis hash</th>
-                <td class="px-4 sm:px-6 py-3.5 text-ink-300 align-top">
-                  <span class="block break-all font-mono text-ink-100">{genesis}</span>
-                </td>
-              </tr>
-            </tbody>
-          </table>
+    <!-- Quick facts -->
+    <section id="specs" class="border-t border-line-soft bg-ink-900/30">
+      <div class="mx-auto max-w-6xl px-6 py-20 sm:py-24">
+        <SectionHeading
+          eyebrow="Reference"
+          title="Quick facts"
+          sub="The essentials. For the full spec — ports, genesis constants, and the emission curve math — see the docs."
+        />
+        <div class="mt-10 grid grid-cols-1 gap-3 sm:grid-cols-2">
+          {quickFacts.map((f, i) => (
+            <div class={`${card} flex items-start gap-4 px-5 py-4`}>
+              <span class="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-md bg-nono-action/15 font-mono text-xs font-semibold text-nono-highlight">
+                {String(i + 1).padStart(2, '0')}
+              </span>
+              <div>
+                <span class="block text-xs text-ink-400">{f.label}</span>
+                <span class="mt-1 block text-base font-medium text-ink-100">{f.value}</span>
+              </div>
+            </div>
+          ))}
         </div>
-        <p class="mt-4 text-sm text-ink-500">
+        <p class="mt-6 text-sm text-ink-400">
+          Full network parameters &amp; emission curve &rarr;
+          <a href="/docs/network-parameters" class="text-nono-highlight underline decoration-line-strong hover:decoration-nono-highlight">docs/network-parameters</a>
+          &nbsp;&middot;&nbsp;
+          <a href="/docs/emission" class="text-nono-highlight underline decoration-line-strong hover:decoration-nono-highlight">docs/emission</a>
+        </p>
+      </div>
+    </section>
+
+    <!-- Start Mining -->
+    <section id="mining" class="border-t border-line-soft">
+      <div class="mx-auto max-w-6xl px-6 py-20 sm:py-24">
+        <SectionHeading
+          eyebrow="Get started"
+          title="Start mining"
+          sub="Run a node. Create a wallet. Mine NONO directly from your CPU — no special hardware, no founder allocation, no premine, no ICO."
+        />
+        <p class="mt-6 max-w-2xl text-sm text-ink-400">
+          Mainnet is live and being mined now. Release binaries are not published yet, so the path
+          today is to build from source. Full instructions are in the docs.
+        </p>
+        <div class={`mt-8 ${card} p-5`}>
+          <p class="text-sm font-medium text-ink-100">Mine to your own address</p>
+          <p class="mt-1 text-sm text-ink-400">
+            Build <code class="text-nono-highlight">nonod</code> from source, then run a node and point
+            RandomX at your wallet address:
+          </p>
+          <pre class="mt-4 overflow-x-auto rounded-md border border-line-soft bg-ink-950 px-4 py-3 text-sm text-ink-200"><code>./nonod --start-mining &lt;YOUR_NONO_ADDRESS&gt; --mining-threads 4</code></pre>
+          <p class="mt-3 text-xs text-ink-400">
+            Make a wallet first with <code class="text-nono-highlight">nono-wallet-cli</code> to get an
+            address. CPU only, no GPU or ASIC needed. See the
+            <a href="/docs/mining" class="text-nono-highlight underline decoration-line-strong hover:decoration-nono-highlight">mining guide</a>.
+          </p>
+        </div>
+
+        <div class="mt-10 grid grid-cols-1 gap-4 sm:grid-cols-3">
+          {miningSteps.map((s, i) => (
+            <a href={s.href} class={`group block ${card} p-6`}>
+              <div class="flex h-9 w-9 items-center justify-center rounded-full bg-nono-action text-sm font-semibold text-white shadow-glow">
+                {i + 1}
+              </div>
+              <h3 class="mt-4 text-lg font-medium text-ink-100">{s.title}</h3>
+              <p class="mt-2 text-sm leading-relaxed text-ink-400">{s.body}</p>
+              <p class="mt-4 text-sm text-nono-highlight transition-colors group-hover:text-ink-100">{s.cta} &rarr;</p>
+            </a>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <!-- Wallets -->
+    <section id="wallets" class="border-t border-line-soft bg-ink-900/30">
+      <div class="mx-auto max-w-6xl px-6 py-20 sm:py-24">
+        <SectionHeading
+          eyebrow="Wallets"
+          title="Hold your own keys"
+          sub="The CLI wallet ships with the source today. Desktop, mobile, and web wallets are on the roadmap — see the wallet guide for setup, backups, and security notes."
+        />
+        <div class="mt-10 grid grid-cols-1 gap-4 sm:grid-cols-2">
+          {wallets.map((w) => (
+            <div class={`${card} flex items-center justify-between px-5 py-4`}>
+              <span class="font-medium text-ink-100">{w.name}</span>
+              <span class={w.live
+                ? 'rounded-full bg-nono-action/15 px-3 py-1 text-xs font-medium text-nono-highlight'
+                : 'rounded-full border border-line-soft px-3 py-1 text-xs font-medium text-ink-400'}>
+                {w.status}
+              </span>
+            </div>
+          ))}
+        </div>
+        <p class="mt-6 text-sm text-ink-400">
+          <a href="/docs/wallet" class="text-nono-highlight underline decoration-line-strong hover:decoration-nono-highlight">Read the wallet guide &rarr;</a>
+        </p>
+      </div>
+    </section>
+
+    <!-- Network Information -->
+    <section id="network" class="border-t border-line-soft">
+      <div class="mx-auto max-w-6xl px-6 py-20 sm:py-24">
+        <SectionHeading
+          eyebrow="Network"
+          title="Network information"
+          sub="Mainnet is up and being mined. A node on the wrong genesis or network ID will not peer with the rest of the network, so check the parameters before you sync."
+        />
+        <div class="mt-8 flex flex-wrap gap-3">
+          <a href="/docs/network-parameters" class={btnGhost}>Full network parameters &rarr;</a>
+          <a href="/docs/verify-genesis" class={btnGhost}>Verify the genesis block &rarr;</a>
+        </div>
+        <p class="mt-6 text-sm text-ink-400">
           Coming soon: current height, difficulty, network hashrate, and active public nodes.
         </p>
       </div>
     </section>
 
     <!-- Resources -->
-    <section id="resources" class="border-t border-ink-800/60 bg-ink-900/40">
-      <div class="mx-auto max-w-4xl px-6 py-24">
-        <h2 class="text-sm font-mono uppercase tracking-widest text-ink-400">Resources</h2>
-        <p class="mt-3 max-w-2xl text-ink-300">Everything in one place.</p>
+    <section id="resources" class="border-t border-line-soft bg-ink-900/30">
+      <div class="mx-auto max-w-6xl px-6 py-20 sm:py-24">
+        <SectionHeading eyebrow="Resources" title="Everything in one place" />
         <div class="mt-10 grid grid-cols-2 gap-3 sm:grid-cols-3">
           {resources.map((r) => (
             r.soon ? (
-              <div class="rounded-lg border border-ink-800 px-5 py-4 text-sm text-ink-500">
+              <div class="rounded-lg border border-line-soft px-5 py-4 text-sm text-ink-400">
                 {r.label}
-                <span class="block text-xs text-ink-600">coming soon</span>
+                <span class="block text-xs text-ink-400/70">coming soon</span>
               </div>
             ) : (
-              <a href={r.href} class="group rounded-lg border border-ink-800 px-5 py-4 text-sm text-ink-200 hover:border-ink-400 hover:text-ink-100 transition-colors">
+              <a href={r.href} class={`group ${card} px-5 py-4 text-sm text-ink-200`}>
                 {r.label}
-                <span class="block text-xs text-ink-500 group-hover:text-ink-300 transition-colors">open &rarr;</span>
+                <span class="block text-xs text-ink-400 transition-colors group-hover:text-nono-highlight">open &rarr;</span>
               </a>
             )
           ))}
@@ -425,91 +377,88 @@ const ecosystem = [
     </section>
 
     <!-- Community -->
-    <section id="community" class="border-t border-ink-800/60">
-      <div class="mx-auto max-w-4xl px-6 py-24">
-        <h2 class="text-sm font-mono uppercase tracking-widest text-ink-400">Why people run NONO</h2>
-        <p class="mt-3 max-w-2xl text-ink-300">
-          People participate for different reasons. The common thread is private money that no one
-          can switch off.
-        </p>
+    <section id="community" class="border-t border-line-soft">
+      <div class="mx-auto max-w-6xl px-6 py-20 sm:py-24">
+        <SectionHeading
+          eyebrow="Community"
+          title="Why people run NONO"
+          sub="People participate for different reasons. The common thread is private money that no one can switch off."
+        />
         <ul class="mt-10 grid grid-cols-1 gap-3 sm:grid-cols-2">
           {whyPeople.map((item) => (
-            <li class="flex items-start gap-3 rounded-md border border-ink-800 px-4 py-3 text-sm text-ink-200">
-              <span class="text-ink-500" aria-hidden="true">&rarr;</span>
+            <li class={`${card} flex items-start gap-3 px-4 py-3 text-sm text-ink-200`}>
+              <svg class="mt-0.5 h-4 w-4 flex-shrink-0 text-nono-highlight" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12" stroke-linecap="round" stroke-linejoin="round"/></svg>
               <span>{item}</span>
             </li>
           ))}
         </ul>
 
-        <h3 class="mt-16 text-sm font-mono uppercase tracking-widest text-ink-400">How to help</h3>
+        <h3 class="mt-16 font-mono text-xs font-semibold uppercase tracking-widest text-nono-highlight">How to help</h3>
         <p class="mt-3 max-w-2xl text-ink-300">You do not need to be a developer to strengthen the network.</p>
         <div class="mt-8 flex flex-wrap gap-2.5">
           {howToHelp.map((item) => (
-            <span class="rounded-full border border-ink-800 px-4 py-2 text-sm text-ink-200">{item}</span>
+            <span class="rounded-full border border-line-soft px-4 py-2 text-sm text-ink-200">{item}</span>
           ))}
         </div>
       </div>
     </section>
 
     <!-- Ecosystem -->
-    <section id="ecosystem" class="border-t border-ink-800/60 bg-ink-900/40">
-      <div class="mx-auto max-w-4xl px-6 py-24">
-        <h2 class="text-sm font-mono uppercase tracking-widest text-ink-400">The NONO ecosystem</h2>
-        <p class="mt-3 max-w-2xl text-ink-300">
-          NONO is growing into an ecosystem, not just a blockchain repository. A few pieces are
-          underway. The rest are open for anyone to build.
-        </p>
+    <section id="ecosystem" class="border-t border-line-soft bg-ink-900/30">
+      <div class="mx-auto max-w-6xl px-6 py-20 sm:py-24">
+        <SectionHeading
+          eyebrow="Ecosystem"
+          title="The NONO ecosystem"
+          sub="NONO is growing into an ecosystem, not just a blockchain repository. A few pieces are underway. The rest are open for anyone to build."
+        />
         <div class="mt-10 grid grid-cols-2 gap-3 sm:grid-cols-3">
           {ecosystem.map((item) => (
-            <div class="rounded-lg border border-ink-800 px-5 py-4">
+            <div class={`${card} px-5 py-4`}>
               <span class="block text-sm text-ink-100">{item.name}</span>
               <span class={item.status === 'In development'
-                ? 'mt-2 inline-block rounded-full border border-ink-600 px-2.5 py-0.5 text-xs font-medium text-ink-100'
-                : 'mt-2 inline-block rounded-full border border-ink-800 px-2.5 py-0.5 text-xs font-medium text-ink-500'}>
+                ? 'mt-2 inline-block rounded-full bg-nono-action/15 px-2.5 py-0.5 text-xs font-medium text-nono-highlight'
+                : 'mt-2 inline-block rounded-full border border-line-soft px-2.5 py-0.5 text-xs font-medium text-ink-400'}>
                 {item.status}
               </span>
             </div>
           ))}
         </div>
-        <div class="mt-10 rounded-lg border border-ink-800 bg-ink-950/40 p-6">
-          <p class="text-ink-200 leading-relaxed">
-            None of this is locked to a core team. Any of these can be built by the community, and
-            we would rather build them with you than alone.
-          </p>
-          <p class="mt-4 text-ink-300 leading-relaxed">
-            We post what we are actively working on in Discord and GitHub. Tell us what you are
-            building so we do not duplicate effort and can help each other ship it.
-          </p>
-          <div class="mt-6 flex flex-wrap gap-3">
-            <a href={discordUrl} class="rounded-md bg-ink-100 px-5 py-2.5 text-sm font-medium text-ink-950 hover:bg-white transition-colors">Join the Discord</a>
-            <a href={telegramUrl} class="rounded-md border border-ink-700 px-5 py-2.5 text-sm font-medium text-ink-100 hover:border-ink-400 transition-colors">Telegram</a>
-            <a href={repoUrl} class="rounded-md border border-ink-700 px-5 py-2.5 text-sm font-medium text-ink-100 hover:border-ink-400 transition-colors">Build on GitHub</a>
+
+        <!-- Final CTA -->
+        <div class="relative mt-10 overflow-hidden rounded-xl border border-line-strong bg-ink-900/60 p-8 text-center backdrop-blur sm:p-12">
+          <div class="pointer-events-none absolute left-1/2 top-0 h-64 w-[560px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-nono-primary/30 blur-3xl"></div>
+          <div class="relative">
+            <p class="text-lg leading-relaxed text-ink-200">
+              None of this is locked to a core team. Any of these can be built by the community, and
+              we would rather build them with you than alone.
+            </p>
+            <p class="mx-auto mt-4 max-w-xl leading-relaxed text-ink-400">
+              We post what we are actively working on in Discord and GitHub. Tell us what you are
+              building so we do not duplicate effort and can help each other ship it.
+            </p>
+            <div class="mt-8 flex flex-wrap justify-center gap-3">
+              <a href={discordUrl} class={btnPrimary}>Join the Discord</a>
+              <a href={telegramUrl} class={btnGhost}>Telegram</a>
+              <a href={repoUrl} class={btnGhost}>Build on GitHub</a>
+            </div>
           </div>
         </div>
       </div>
     </section>
 
     <!-- Verify -->
-    <section id="verify" class="border-t border-ink-800/60">
-      <div class="mx-auto max-w-3xl px-6 py-24">
-        <h2 class="text-sm font-mono uppercase tracking-widest text-ink-400">Don't trust. Verify.</h2>
-        <div class="mt-8 space-y-6 text-ink-300 leading-relaxed">
+    <section id="verify" class="border-t border-line-soft">
+      <div class="mx-auto max-w-6xl px-6 py-20 sm:py-24">
+        <SectionHeading eyebrow="Verify" title="Don't trust. Verify." />
+        <div class="mt-8 max-w-3xl space-y-6 leading-relaxed text-ink-300">
           <p>
             The claim "no premine" only matters if it can be checked. NONO's genesis coinbase
             output is paid to a NUMS pubkey, a point on the curve with no known private key,
-            derived deterministically from a public seed.
+            derived deterministically from a public seed — provably unspendable by anyone.
           </p>
           <p>
-            A small Python script in the chain repo regenerates the exact bytes of the genesis
-            transaction from that seed. Run it yourself, compare the output against the binary in
-            the source tree, and confirm the 42.38 NONO genesis output is unspendable by anyone.
-          </p>
-          <p>
-            <a
-              href={`${repoUrl}/blob/master/utils/genesis/derive_nums_pubkeys.py`}
-              class="inline-flex items-center gap-1 text-ink-100 underline decoration-ink-700 hover:decoration-ink-100"
-            >
-              utils/genesis/derive_nums_pubkeys.py &rarr;
+            <a href="/docs/verify-genesis" class="inline-flex items-center gap-1 text-nono-highlight underline decoration-line-strong hover:decoration-nono-highlight">
+              Read the full verification walkthrough &rarr;
             </a>
           </p>
         </div>
@@ -517,10 +466,10 @@ const ecosystem = [
     </section>
 
     <!-- Attribution -->
-    <section id="attribution" class="border-t border-ink-800/60 bg-ink-900/40">
-      <div class="mx-auto max-w-3xl px-6 py-24">
-        <h2 class="text-sm font-mono uppercase tracking-widest text-ink-400">Built on Monero</h2>
-        <div class="mt-8 space-y-6 text-ink-300 leading-relaxed">
+    <section id="attribution" class="border-t border-line-soft bg-ink-900/30">
+      <div class="mx-auto max-w-6xl px-6 py-20 sm:py-24">
+        <SectionHeading eyebrow="Attribution" title="Built on Monero" />
+        <div class="mt-8 max-w-3xl space-y-6 leading-relaxed text-ink-300">
           <p>
             NONO is built directly on the Monero source tree and would not exist without the work
             of the Monero Project, the Monero Research Lab, and the Cryptonote authors. Where
@@ -532,28 +481,14 @@ const ecosystem = [
             by NONO's changes are NONO's responsibility, not theirs.
           </p>
           <p class="text-sm text-ink-400">
-            Upstream: <a href="https://github.com/monero-project/monero" class="underline decoration-ink-700 hover:decoration-ink-100">github.com/monero-project/monero</a>
+            Upstream: <a href="https://github.com/monero-project/monero" class="text-nono-highlight underline decoration-line-strong hover:decoration-nono-highlight">github.com/monero-project/monero</a>
             &nbsp;&middot;&nbsp;
-            RandomX: <a href="https://github.com/tevador/RandomX" class="underline decoration-ink-700 hover:decoration-ink-100">github.com/tevador/RandomX</a>
+            RandomX: <a href="https://github.com/tevador/RandomX" class="text-nono-highlight underline decoration-line-strong hover:decoration-nono-highlight">github.com/tevador/RandomX</a>
           </p>
         </div>
       </div>
     </section>
   </main>
 
-  <footer class="border-t border-ink-800/60">
-    <div class="mx-auto flex max-w-6xl flex-col gap-6 px-6 py-10 sm:flex-row sm:items-center sm:justify-between">
-      <div class="flex items-center gap-3">
-        <img src="/logo/nono-wordmark-light.png" alt="NONO" width="68" height="17" class="h-4 w-auto opacity-70" />
-        <span class="text-xs text-ink-400">Fair-launch RandomX privacy L1</span>
-      </div>
-      <div class="flex items-center gap-6 text-sm text-ink-300">
-        <a href={repoUrl} class="hover:text-ink-100 transition-colors">GitHub</a>
-        <a href={discordUrl} class="hover:text-ink-100 transition-colors">Discord</a>
-        <a href={telegramUrl} class="hover:text-ink-100 transition-colors">Telegram</a>
-        <a href={xUrl} class="hover:text-ink-100 transition-colors">X</a>
-        <a href="#verify" class="hover:text-ink-100 transition-colors">Verify</a>
-      </div>
-    </div>
-  </footer>
+  <Footer />
 </Base>

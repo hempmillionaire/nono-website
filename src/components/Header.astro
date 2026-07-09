@@ -1,0 +1,62 @@
+---
+const repoUrl = 'https://github.com/hempmillionaire/nono';
+const xUrl = 'https://x.com/nonochain';
+const discordUrl = 'https://discord.gg/Tuwt6TAbJw';
+const telegramUrl = 'https://t.me/nonoprivacy';
+
+const navLinks = [
+  { href: '/#why', label: 'Why NONO' },
+  { href: '/#randomx', label: 'RandomX' },
+  { href: '/#mining', label: 'Mining' },
+  { href: '/#network', label: 'Network' },
+  { href: '/docs', label: 'Docs' },
+  { href: '/#resources', label: 'Resources' },
+];
+
+const socialLinks = [
+  { href: discordUrl, label: 'Discord' },
+  { href: telegramUrl, label: 'Telegram' },
+  { href: xUrl, label: 'X' },
+  { href: repoUrl, label: 'GitHub' },
+];
+---
+<header class="sticky top-0 z-50 border-b border-line-soft bg-ink-950/70 backdrop-blur-md">
+  <div class="relative mx-auto flex max-w-6xl items-center justify-between px-6 py-4">
+    <a href="/" class="flex items-center gap-3" aria-label="NONO home">
+      <img src="/logo/nono-mark-light.png" alt="" width="32" height="32" class="h-8 w-8" />
+      <span class="text-base font-semibold tracking-tight text-ink-100">NONO</span>
+    </a>
+
+    <nav class="hidden md:flex items-center gap-6 text-sm text-ink-300" aria-label="Primary">
+      {navLinks.map((l) => (
+        <a href={l.href} class="transition-colors hover:text-ink-100">{l.label}</a>
+      ))}
+      {socialLinks.map((l) => (
+        <a href={l.href} class="transition-colors hover:text-ink-100">{l.label}</a>
+      ))}
+    </nav>
+
+    <details class="md:hidden">
+      <summary
+        class="flex cursor-pointer select-none list-none items-center gap-2 rounded-md border border-line-soft px-3 py-2.5 text-sm font-medium text-ink-200 hover:border-line-strong hover:text-ink-100 [&::-webkit-details-marker]:hidden"
+        aria-label="Open menu"
+      >
+        <svg class="h-5 w-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
+          <path stroke-linecap="round" d="M4 6h16M4 12h16M4 18h16"/>
+        </svg>
+        Menu
+      </summary>
+      <div class="absolute inset-x-6 top-full z-20 mt-3 rounded-lg border border-line-soft bg-ink-950/95 p-3 shadow-glass backdrop-blur-md">
+        <nav class="flex flex-col gap-1 text-base" aria-label="Mobile">
+          {navLinks.map((l) => (
+            <a href={l.href} class="rounded-md px-4 py-3 text-ink-200 hover:bg-nono-primary/10 hover:text-ink-100">{l.label}</a>
+          ))}
+          <div class="my-2 border-t border-line-soft"></div>
+          {socialLinks.map((l) => (
+            <a href={l.href} class="rounded-md px-4 py-3 text-ink-200 hover:bg-nono-primary/10 hover:text-ink-100">{l.label}</a>
+          ))}
+        </nav>
+      </div>
+    </details>
+  </div>
+</header>
